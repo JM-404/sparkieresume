@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Resume AutoFill",
+  "description": "Parse resume and autofill job application forms.",
+  "version": "0.1.1",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["*://*/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["utils/storage.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "icons": {
+    "16": "assets/icon.png",
+    "48": "assets/icon.png",
+    "128": "assets/icon.png"
+  }
+}

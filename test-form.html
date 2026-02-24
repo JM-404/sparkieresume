@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume AutoFill Test Form</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "PingFang SC", sans-serif;
+        background: #f4f7fb;
+        color: #1b2430;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 24px auto;
+        padding: 0 16px 40px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #dbe3ef;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 14px;
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .tabs button {
+        border: 1px solid #cfd9e8;
+        background: #fff;
+        color: #1b2430;
+      }
+      .tabs button.active {
+        background: #0a66c2;
+        color: #fff;
+        border-color: #0a66c2;
+      }
+      h1 {
+        margin: 0 0 12px;
+      }
+      h2 {
+        margin: 0 0 8px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+      input,
+      textarea,
+      select,
+      button {
+        width: 100%;
+        border: 1px solid #cfd9e8;
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 14px;
+        box-sizing: border-box;
+        background: #fff;
+      }
+      textarea {
+        min-height: 96px;
+        resize: vertical;
+      }
+      .row {
+        margin-bottom: 10px;
+      }
+      .inline {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .inline label {
+        margin: 0;
+        font-weight: 500;
+      }
+      .primary {
+        border: none;
+        background: #0a66c2;
+        color: #fff;
+        cursor: pointer;
+      }
+      pre {
+        margin: 0;
+        background: #f8fafe;
+        border: 1px solid #dbe3ef;
+        border-radius: 8px;
+        padding: 10px;
+        overflow: auto;
+      }
+      .muted {
+        color: #5e6b7f;
+        font-size: 13px;
+      }
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+      }
+      .wizard-step {
+        display: none;
+      }
+      .wizard-step.active {
+        display: block;
+      }
+      .wizard-nav {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 8px;
+      }
+      .wizard-nav button {
+        width: auto;
+        min-width: 120px;
+      }
+      @media (max-width: 760px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>网申自动填写测试页</h1>
+      <p class="muted">用 popup 的 Fill Current Page 测。单页和多页都可以测试。</p>
+
+      <div class="tabs card">
+        <button id="tabSingle" class="active" type="button">单页测试</button>
+        <button id="tabMulti" type="button">多页向导测试</button>
+      </div>
+
+      <section id="panelSingle" class="panel active">
+        <form id="applyFormSingle" class="card">
+          <h2>单页申请表</h2>
+          <div class="grid">
+            <div class="row">
+              <label for="singleFullName">Full Name</label>
+              <input id="singleFullName" name="fullName" type="text" />
+            </div>
+            <div class="row">
+              <label for="singleEmail">Email Address</label>
+              <input id="singleEmail" name="email" type="email" />
+            </div>
+            <div class="row">
+              <label for="singlePhone">Phone Number</label>
+              <input id="singlePhone" name="phone" type="tel" />
+            </div>
+            <div class="row">
+              <label for="singleUniversity">University / School</label>
+              <input id="singleUniversity" name="university" type="text" />
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="singleSkills">Skills</label>
+            <textarea id="singleSkills" name="skills"></textarea>
+          </div>
+
+          <div class="row">
+            <label for="singleExperience">Experience Summary</label>
+            <textarea id="singleExperience" name="experience"></textarea>
+          </div>
+
+          <button class="primary" type="submit">Submit Single Form (Preview)</button>
+        </form>
+
+        <section class="card">
+          <h2>单页结果</h2>
+          <pre id="singleResult">尚未提交</pre>
+        </section>
+      </section>
+
+      <section id="panelMulti" class="panel">
+        <form id="applyFormMulti" class="card">
+          <h2>多页向导申请表</h2>
+          <p class="muted">开启 popup 的 multi-page auto continue 后，点击一次 Fill Current Page 应该会自动点 Next 并继续填下一步。</p>
+
+          <div id="step1" class="wizard-step active">
+            <h3>Step 1 - Basic Info</h3>
+            <div class="grid">
+              <div class="row">
+                <label for="multiFullName">Full Name</label>
+                <input id="multiFullName" name="fullName" type="text" />
+              </div>
+              <div class="row">
+                <label for="multiEmail">Email Address</label>
+                <input id="multiEmail" name="email" type="email" />
+              </div>
+              <div class="row">
+                <label for="multiPhone">Phone Number</label>
+                <input id="multiPhone" name="phone" type="tel" />
+              </div>
+              <div class="row">
+                <label for="multiUniversity">University / School</label>
+                <input id="multiUniversity" name="university" type="text" />
+              </div>
+            </div>
+            <div class="wizard-nav">
+              <button id="nextStep1" class="primary" type="button">Next</button>
+            </div>
+          </div>
+
+          <div id="step2" class="wizard-step">
+            <h3>Step 2 - Skills & Experience</h3>
+            <div class="row">
+              <label for="multiSkills">Skills</label>
+              <textarea id="multiSkills" name="skills"></textarea>
+            </div>
+            <div class="row">
+              <label for="multiExperience">Experience Summary</label>
+              <textarea id="multiExperience" name="experience"></textarea>
+            </div>
+            <div class="wizard-nav">
+              <button id="backStep2" type="button">Back</button>
+              <button id="nextStep2" class="primary" type="button">Continue</button>
+            </div>
+          </div>
+
+          <div id="step3" class="wizard-step">
+            <h3>Step 3 - Confirm</h3>
+            <div class="row inline">
+              <input id="multiRemote" name="remote" type="checkbox" value="yes" style="width:auto" />
+              <label for="multiRemote">Open to Remote Work</label>
+            </div>
+            <div class="row">
+              <label for="multiWorkAuth">Work Authorization</label>
+              <select id="multiWorkAuth" name="workAuth">
+                <option value="">Please choose</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+            <div class="wizard-nav">
+              <button id="backStep3" type="button">Back</button>
+              <button id="submitMulti" class="primary" type="submit">Submit Wizard (Preview)</button>
+            </div>
+          </div>
+        </form>
+
+        <section class="card">
+          <h2>多页结果</h2>
+          <pre id="multiResult">尚未提交</pre>
+        </section>
+      </section>
+    </div>
+
+    <script>
+      const tabSingle = document.getElementById("tabSingle");
+      const tabMulti = document.getElementById("tabMulti");
+      const panelSingle = document.getElementById("panelSingle");
+      const panelMulti = document.getElementById("panelMulti");
+
+      function activateTab(mode) {
+        const single = mode === "single";
+        tabSingle.classList.toggle("active", single);
+        tabMulti.classList.toggle("active", !single);
+        panelSingle.classList.toggle("active", single);
+        panelMulti.classList.toggle("active", !single);
+      }
+
+      tabSingle.addEventListener("click", () => activateTab("single"));
+      tabMulti.addEventListener("click", () => activateTab("multi"));
+
+      function formDataToObject(form) {
+        const fd = new FormData(form);
+        const data = {};
+        for (const [k, v] of fd.entries()) {
+          if (Object.prototype.hasOwnProperty.call(data, k)) {
+            if (!Array.isArray(data[k])) data[k] = [data[k]];
+            data[k].push(v);
+          } else {
+            data[k] = v;
+          }
+        }
+        return data;
+      }
+
+      const applyFormSingle = document.getElementById("applyFormSingle");
+      const singleResult = document.getElementById("singleResult");
+      applyFormSingle.addEventListener("submit", (e) => {
+        e.preventDefault();
+        singleResult.textContent = JSON.stringify(formDataToObject(applyFormSingle), null, 2);
+      });
+
+      const steps = [
+        document.getElementById("step1"),
+        document.getElementById("step2"),
+        document.getElementById("step3")
+      ];
+      let currentStep = 0;
+
+      function showStep(index) {
+        currentStep = Math.max(0, Math.min(steps.length - 1, index));
+        steps.forEach((el, i) => el.classList.toggle("active", i === currentStep));
+      }
+
+      document.getElementById("nextStep1").addEventListener("click", () => showStep(1));
+      document.getElementById("backStep2").addEventListener("click", () => showStep(0));
+      document.getElementById("nextStep2").addEventListener("click", () => showStep(2));
+      document.getElementById("backStep3").addEventListener("click", () => showStep(1));
+
+      const applyFormMulti = document.getElementById("applyFormMulti");
+      const multiResult = document.getElementById("multiResult");
+      applyFormMulti.addEventListener("submit", (e) => {
+        e.preventDefault();
+        multiResult.textContent = JSON.stringify(formDataToObject(applyFormMulti), null, 2);
+      });
+    </script>
+  </body>
+</html>
